@@ -1,0 +1,80 @@
+{
+  "name": "Global Radio News",
+  "short_name": "Radio News",
+  "description": "Stream live news from public radio stations worldwide",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#2c3e50",
+  "orientation": "portrait-primary",
+  "categories": ["news", "music", "entertainment"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23667eea' rx='20'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>📻</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23667eea' rx='50'/><text x='256' y='350' font-size='280' text-anchor='middle' fill='white'>📻</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect width='540' height='720' fill='%23f8f9fa'/><rect x='20' y='60' width='500' height='80' fill='%23667eea' rx='10'/><text x='270' y='110' font-size='24' text-anchor='middle' fill='white'>📻 Global Radio News</text><rect x='20' y='160' width='500' height='200' fill='white' stroke='%23e0e0e0' rx='10'/><text x='270' y='190' font-size='16' text-anchor='middle'>Audio Player</text><rect x='20' y='380' width='240' height='60' fill='%23667eea' rx='8'/><text x='140' y='415' font-size='14' text-anchor='middle' fill='white'>🇩🇪 Deutschlandfunk</text><rect x='280' y='380' width='240' height='60' fill='%23667eea' rx='8'/><text x='400' y='415' font-size='14' text-anchor='middle' fill='white'>🇬🇧 BBC Radio 4</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Mobile view of radio stations"
+    }
+  ],
+  "scope": "./",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "BBC Radio 4",
+      "short_name": "BBC",
+      "description": "UK news and current affairs",
+      "url": "./index.html?station=bbc",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23667eea' rx='10'/><text x='48' y='65' font-size='50' text-anchor='middle' fill='white'>🇬🇧</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "NPR Live",
+      "short_name": "NPR",
+      "description": "US National Public Radio",
+      "url": "./index.html?station=npr",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23667eea' rx='10'/><text x='48' y='65' font-size='50' text-anchor='middle' fill='white'>🇺🇸</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Deutschlandfunk",
+      "short_name": "DLF",
+      "description": "German news and current affairs",
+      "url": "./index.html?station=dlf",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' fill='%23667eea' rx='10'/><text x='48' y='65' font-size='50' text-anchor='middle' fill='white'>🇩🇪</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
