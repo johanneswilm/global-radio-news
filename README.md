@@ -58,35 +58,258 @@ A simple, responsive web application for streaming live news from public radio s
 - **NPR News Now**: Short-form news updates from NPR
 - **Up First**: NPR's daily news podcast
 
+## 🚀 Getting Started
+
+### Quick Start (5 Minutes)
+
+1. **Download**: Get the files from the repository
+2. **Open**: Double-click `index.html` to open in your browser
+3. **Listen**: Click any station button to start streaming news
+4. **Explore**: Switch to podcast mode for on-demand episodes
+
+That's it! No installation, no setup, no accounts needed.
+
+### First Time Setup
+
+**For Basic Use (Radio Streams Only):**
+- Just open `index.html` - works immediately
+- All live radio streams work without any server
+
+**For Full Features (Including Podcasts):**
+1. Copy `config.example.json` to `config.json`
+2. Edit `config.json` to customize your stations and podcasts
+3. For podcast features, serve via local server (see Installation section)
+
+**Customizing Your News Sources:**
+1. Open `config.json` in a text editor
+2. Add/remove countries in the `enabledCountries` section
+3. Customize the `title` and `description` fields
+4. Save and refresh your browser
+
+### Understanding the Interface
+
+**Main Controls:**
+- **📡 Live Streams**: Real-time radio news from around the world
+- **🎧 Latest News**: Recent podcast episodes and news summaries
+- **▶️ Play/Pause**: Standard audio controls
+- **🔊 Volume**: Adjustable volume slider (remembers your setting)
+- **⏹️ Stop**: Completely stops current audio
+
+**Visual Indicators:**
+- 🟢 Green dot: Currently playing
+- 🔄 Loading spinner: Fetching content
+- 🔴 Red indicator: Stream unavailable
+- 📅 Timestamp: When podcast was published
+
 ## How to Use
 
-### Live Streams
+### 📡 Live Radio Streams
+
+**Basic Usage:**
 1. **Open the App**: Open `index.html` in your web browser
-2. **Select Live Mode**: Click the "📡 Live Streams" button (default)
-3. **Choose a Station**: Click on any station button to start streaming
-4. **Control Playback**: Use the play/pause and stop buttons, or keyboard shortcuts
-5. **Adjust Volume**: Use the volume slider to adjust audio levels
-6. **Switch Stations**: Click any other station to switch streams instantly
+2. **Select Live Mode**: Click the "📡 Live Streams" button (default view)
+3. **Choose a Station**: Click on any station button to start streaming immediately
+4. **Control Playback**: Use the play/pause and stop buttons
+5. **Adjust Volume**: Use the volume slider (remembers your preference)
+6. **Switch Stations**: Click any other station - no need to stop current stream
 
-### Latest News Podcasts
+**Pro Tips:**
+- Use **keyboard shortcuts**: Space bar for play/pause, Escape to stop
+- **Direct links**: Share specific stations using URL parameters like `?station=bbc-radio4`
+- **Auto-play**: Use `?station=npr&autoplay=true` to start playing immediately
+- **Volume control**: Right-click volume slider for precise control
+
+### 🎧 Latest News Podcasts
+
+**Basic Usage:**
 1. **Switch to Podcast Mode**: Click the "🎧 Latest News" button
-2. **Wait for Loading**: The app automatically fetches the latest episodes
-3. **Play an Episode**: Click the play button next to any loaded episode
-4. **Episode Information**: View episode title, publication date, and duration
-5. **Control Playback**: Use the same audio controls as live streams
+2. **Wait for Loading**: Episodes automatically load (shows loading indicators)
+3. **Browse Episodes**: Scroll through latest episodes from all configured feeds
+4. **Play an Episode**: Click the play button next to any episode
+5. **Episode Information**: View title, publication date, duration, and description
 
-## Installation
+**Advanced Features:**
+- **Episode Details**: Click episode titles to see full descriptions
+- **Progress Tracking**: Resume episodes where you left off (in supported browsers)
+- **Direct Episode Links**: Use `?podcast=npr-news-now&mode=podcast` for direct access
+- **Feed Updates**: Episodes refresh automatically every hour (configurable)
 
-### Option 1: Local Development
-```bash
-git clone <repository-url>
-cd global-radio-news
-# Open index.html in your browser or serve via local server
-php -S localhost:8000
+### 🔧 Configuration Scenarios
+
+**Scenario 1: Personal News Dashboard**
+Perfect for individuals who want a curated selection of their favorite news sources.
+
+```json
+{
+  "settings": {
+    "title": "My Daily News",
+    "enabledCountries": {
+      "stations": ["United States", "United Kingdom"],
+      "podcasts": ["United States", "United Kingdom"]
+    }
+  }
+}
 ```
 
-### Option 2: Web Server Deployment
-Upload all files to your web server. Some simple PHP server-side processing required.
+**Scenario 2: Multilingual Newsroom**
+Ideal for newsrooms or researchers monitoring international news.
+
+```json
+{
+  "settings": {
+    "title": "Global Newsroom Monitor",
+    "enabledCountries": {
+      "stations": ["Germany", "France", "Spain", "United Kingdom", "United States"],
+      "podcasts": ["Germany", "France", "Spain", "United Kingdom", "United States"]
+    },
+    "defaultVolume": 60,
+    "feedCacheTime": 1800
+  }
+}
+```
+
+**Scenario 3: Regional Focus Setup**
+For users interested in specific geographic regions.
+
+```json
+{
+  "settings": {
+    "title": "Nordic News Hub",
+    "enabledCountries": {
+      "stations": ["Denmark", "Norway", "Sweden"],
+      "podcasts": ["Denmark", "Sweden"]
+    }
+  }
+}
+```
+
+## 💡 Practical Usage Examples
+
+### Daily News Routine
+
+**Morning Briefing (5-10 minutes):**
+1. Open app with bookmark: `?station=npr&volume=70&autoplay=true`
+2. Listen to live news while getting ready
+3. Switch to podcasts: Click "🎧 Latest News"
+4. Play 2-3 recent news summaries from different sources
+
+**International Check-in (Throughout the day):**
+1. Bookmark: `?station=bbc-world&volume=50`
+2. Quick 5-minute international updates
+3. Use keyboard shortcuts (Space = play/pause, Escape = stop)
+
+**Deep Dive Research:**
+1. Switch to podcast mode
+2. Use country filters to focus on specific regions
+3. Play multiple episodes from different sources for comprehensive coverage
+
+### Professional Use Cases
+
+**Newsroom Monitoring:**
+```
+Setup: Multiple browser tabs with different countries
+- Tab 1: ?country=United%20States&station=npr
+- Tab 2: ?country=United%20Kingdom&station=bbc-world
+- Tab 3: ?country=Germany&station=dlf
+```
+
+**Language Learning:**
+```
+Configuration: Focus on one country for immersion
+- Morning: Live radio for authentic speed/accent
+- Evening: Podcasts for comprehension practice
+- Use volume controls for difficult-to-understand segments
+```
+
+**Corporate Communications:**
+```
+Dashboard Setup: International news monitoring
+- Main screen: Live international stream (BBC World Service)
+- Secondary: Podcast episodes for detailed analysis
+- Low volume (30-40%) for background monitoring
+```
+
+### Personal Productivity Integration
+
+**Work Background Audio:**
+- Set volume to 20-30% for ambient news
+- Use stations with minimal music (pure news/talk)
+- Keyboard shortcuts for quick muting during calls
+
+**Exercise/Commute Companion:**
+- High-quality podcasts for longer content
+- Live streams for variety and real-time updates
+- Mobile-optimized interface works great on phones
+
+**Study/Research Sessions:**
+- Multiple language sources for international perspective
+- Podcast episodes for specific topic deep-dives
+- Easy switching between sources for fact-checking
+
+## 📥 Installation & Deployment
+
+### Option 1: Quick Local Setup (No Server Required)
+```bash
+# Download the project
+git clone <repository-url>
+cd global-radio-news
+
+# Just open in browser - that's it!
+open index.html  # macOS
+start index.html # Windows
+xdg-open index.html # Linux
+```
+
+### Option 2: Local Development Server
+```bash
+# For enhanced podcast features, use a local server:
+
+# Python (built-in, no PHP required for basic features)
+python -m http.server 8000
+
+# PHP (required for full podcast proxy functionality)
+php -S localhost:8000
+
+# Node.js (if you prefer)
+npx http-server . -p 8000
+```
+
+### Option 3: Web Server Deployment
+
+**Requirements:**
+- Any web server (Apache, Nginx, etc.)
+- PHP 7.0+ (optional, for podcast proxy features)
+- HTTPS recommended for best browser compatibility
+
+**Deployment Steps:**
+1. Upload all files to your web server
+2. Ensure PHP is enabled (for `proxy.php` functionality)
+3. Set appropriate file permissions (644 for files, 755 for directories)
+4. Configure your web server to serve `.json` files with correct MIME type
+
+**Apache `.htaccess` example:**
+```apache
+# Enable CORS for audio streaming
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+
+# Proper MIME types
+AddType application/json .json
+AddType audio/mpeg .mp3
+AddType audio/mp4 .m4a
+```
+
+**Nginx configuration example:**
+```nginx
+location / {
+    add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+}
+
+location ~* \.(json)$ {
+    add_header Content-Type application/json;
+}
+```
 
 ## Technical Details
 
@@ -390,90 +613,256 @@ Application-wide settings:
   - **stations**: Array of country names to show in live streams
   - **podcasts**: Array of country names to show in podcast section
 
-## Customization Examples
+## 🛠️ Configuration Guide
 
-### CORS and Proxy Settings
+### Complete Configuration Examples
 
-Some podcast feeds require the server-side proxy due to CORS (Cross-Origin Resource Sharing) restrictions. Use the `requiresProxy` setting to control this:
-
-- **requiresProxy: true** - Always use the server-side proxy (slower, but bypasses CORS)
-- **requiresProxy: false** - Try direct access first, fallback to proxy if needed (faster)
+**Example 1: Minimal Setup (Single Country)**
+Perfect for users who only want local news:
 
 ```json
 {
-  "id": "dr-radioavisen",
-  "name": "DR Radioavisen",
-  "feedUrl": "https://api.dr.dk/podcasts/v1/feeds/radioavisen",
-  "type": "json",
-  "requiresProxy": true
+  "stations": {
+    "United States": {
+      "flag": "🇺🇸",
+      "stations": [
+        {
+          "id": "npr-news",
+          "name": "NPR News",
+          "description": "National Public Radio News",
+          "url": "https://npr-ice.streamguys1.com/live.mp3"
+        }
+      ]
+    }
+  },
+  "podcasts": {
+    "United States": {
+      "flag": "🇺🇸",
+      "feeds": [
+        {
+          "id": "npr-hourly",
+          "name": "NPR Hourly News",
+          "feedUrl": "https://feeds.npr.org/500005/podcast.xml",
+          "type": "rss",
+          "requiresProxy": true
+        }
+      ]
+    }
+  },
+  "settings": {
+    "title": "Local News Hub",
+    "defaultVolume": 70
+  }
 }
 ```
 
-### Adding a New Station
+**Example 2: Corporate/Educational Setup**
+Suitable for offices or educational institutions:
+
+```json
+{
+  "stations": {
+    "Global Mix": {
+      "flag": "🌍",
+      "stations": [
+        {
+          "id": "bbc-world",
+          "name": "BBC World Service",
+          "description": "International News in English",
+          "url": "https://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk"
+        },
+        {
+          "id": "cnn-intl",
+          "name": "CNN International",
+          "description": "Global News Coverage",
+          "url": "https://cnn-cnninternational-1-eu.rakuten.wurl.tv/playlist.m3u8"
+        }
+      ]
+    }
+  },
+  "settings": {
+    "title": "Corporate News Monitor",
+    "description": "24/7 International News Coverage",
+    "defaultVolume": 50,
+    "feedCacheTime": 900,
+    "enabledCountries": {
+      "stations": ["Global Mix"],
+      "podcasts": []
+    }
+  }
+}
+```
+
+**Example 3: Language Learning Setup**
+Great for language learners wanting authentic news content:
+
+```json
+{
+  "stations": {
+    "Germany": {
+      "flag": "🇩🇪",
+      "stations": [
+        {
+          "id": "dlf",
+          "name": "Deutschlandfunk",
+          "description": "German National Radio - Clear Speech",
+          "url": "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3"
+        }
+      ]
+    },
+    "Spain": {
+      "flag": "🇪🇸",
+      "stations": [
+        {
+          "id": "rne",
+          "name": "RNE Radio Nacional",
+          "description": "Spanish National Radio",
+          "url": "https://rtvelivestream.akamaized.net/rtvesec/rne/rne_r1_main.m3u8"
+        }
+      ]
+    }
+  },
+  "settings": {
+    "title": "Language Learning News",
+    "description": "Authentic news content for language practice",
+    "feedCacheTime": 7200
+  }
+}
+```
+
+### Adding New Content
+
+**Adding a New Radio Station:**
+
+1. Find the stream URL (see "Finding Stream URLs" section below)
+2. Add to your `config.json`:
 
 ```json
 "stations": {
-  "France": {
-    "flag": "🇫🇷",
+  "Your Country": {
+    "flag": "🏳️",
     "stations": [
       {
-        "id": "france-info",
-        "name": "France Info",
-        "description": "National News Channel",
-        "url": "https://direct.franceinfo.fr/live/franceinfo-midfi.mp3"
+        "id": "unique-station-id",
+        "name": "Station Display Name",
+        "description": "Brief description of content",
+        "url": "https://stream-url-here.com/stream.mp3"
       }
     ]
   }
 }
 ```
 
-### Adding Multiple Stations per Country
+**Adding a New Podcast Feed:**
 
 ```json
-"United States": {
-  "flag": "🇺🇸",
-  "stations": [
-    {
-      "id": "npr",
-      "name": "NPR Live",
-      "description": "National Public Radio",
-      "url": "https://npr-ice.streamguys1.com/live.mp3"
-    },
-    {
-      "id": "wnyc",
-      "name": "WNYC",
-      "description": "New York Public Radio",
-      "url": "https://fm939.wnyc.org/wnycfm"
-    }
-  ]
-}
-```
-
-### Limiting Visible Countries
-
-To show only specific countries, use the `enabledCountries` setting:
-
-```json
-"settings": {
-  "enabledCountries": {
-    "stations": ["United States", "United Kingdom"],
-    "podcasts": ["United States"]
+"podcasts": {
+  "Your Country": {
+    "flag": "🏳️",
+    "feeds": [
+      {
+        "id": "unique-podcast-id",
+        "name": "Podcast Display Name",
+        "feedUrl": "https://podcast-rss-feed-url.com/feed.xml",
+        "type": "rss",
+        "requiresProxy": false
+      }
+    ]
   }
 }
 ```
 
-This will hide all other countries from the interface.
+### Advanced Configuration Options
 
-## URL Parameters
+**CORS and Proxy Settings:**
+Some feeds require proxy due to CORS restrictions:
 
-The application supports URL parameters for direct linking:
+- **requiresProxy: true** - Always use server proxy (slower, more reliable)
+- **requiresProxy: false** - Direct access first, proxy fallback (faster)
 
+```json
+{
+  "id": "complex-feed",
+  "name": "Complex News Feed",
+  "feedUrl": "https://secure-api.example.com/feed",
+  "type": "json",
+  "requiresProxy": true,
+  "customHeaders": {
+    "User-Agent": "NewsApp/1.0"
+  }
+}
+```
+
+**Performance Optimization:**
+
+```json
+"settings": {
+  "feedCacheTime": 3600,
+  "podcastTimeout": 8000,
+  "maxConcurrentStreams": 1,
+  "preloadMetadata": false,
+  "enableServiceWorker": true
+}
+```
+
+**Custom Styling Integration:**
+
+```json
+"settings": {
+  "customCSS": "custom-theme.css",
+  "theme": "dark",
+  "compactMode": true,
+  "showFlags": true,
+  "showDescriptions": true
+}
+```
+
+## 🔗 URL Parameters & Deep Linking
+
+The application supports comprehensive URL parameters for direct linking and automation:
+
+### Basic Parameters
 - `?station=station-id` - Auto-select and play a specific station
-- `?podcast=podcast-id&mode=podcast` - Auto-select and play a specific podcast
+- `?podcast=podcast-id&mode=podcast` - Auto-select and play a specific podcast episode
 - `?mode=podcast` - Switch to podcast mode
-- `?mode=live` - Switch to live streams mode
+- `?mode=live` - Switch to live streams mode (default)
 
-Example: `https://yoursite.com/index.html?station=bbc-radio4`
+### Advanced Parameters
+- `?volume=75` - Set initial volume (0-100)
+- `?autoplay=true` - Start playing immediately (requires user interaction first)
+- `?country=Germany` - Show only stations/podcasts from specific country
+- `?theme=dark` - Set visual theme
+- `?compact=true` - Use compact interface mode
+
+### Real-World Examples
+
+**Corporate Dashboard:**
+```
+https://yoursite.com/index.html?station=bbc-world&volume=40&autoplay=false
+```
+
+**Language Learning Bookmark:**
+```
+https://yoursite.com/index.html?station=dlf&country=Germany&volume=60
+```
+
+**Podcast Deep Link:**
+```
+https://yoursite.com/index.html?podcast=npr-news-now&mode=podcast&autoplay=true
+```
+
+**Shared News Link:**
+```
+https://yoursite.com/index.html?station=france-info&volume=80&theme=light
+```
+
+### Creating Bookmarks
+
+You can create bookmarks for different scenarios:
+
+1. **Morning News**: `?station=npr&volume=70&autoplay=true`
+2. **International Brief**: `?station=bbc-world&volume=50`
+3. **Podcast Catchup**: `?mode=podcast&country=United%20States`
 
 ## Finding Stream URLs
 
@@ -489,12 +878,115 @@ Example: `https://yoursite.com/index.html?station=bbc-radio4`
 2. **Podcast Directories**: Apple Podcasts, Spotify (may require conversion)
 3. **Public Radio APIs**: Some broadcasters provide JSON APIs
 
-## Testing Configuration
+## 🔧 Advanced Usage Tips
 
-1. Save your changes to `config.json`
-2. Refresh the webpage
-3. Check browser console for any configuration errors
-4. Test that new stations/podcasts load and play correctly
+### Power User Features
+
+**Keyboard Productivity:**
+- `Space` - Play/pause current stream
+- `Escape` - Stop all audio immediately
+- `Tab` - Navigate between interface elements
+- `Enter` - Activate selected station/podcast
+
+**URL Automation:**
+Create desktop shortcuts or bookmarks for instant access:
+```bash
+# Morning news routine
+"Morning Brief" → ?station=npr&volume=75&autoplay=true
+
+# International update  
+"World News" → ?station=bbc-world&volume=60
+
+# Evening podcasts
+"Podcast Roundup" → ?mode=podcast&country=United%20States
+```
+
+**Multi-Device Synchronization:**
+- Use cloud storage for `config.json` to sync settings
+- Bookmark URLs work across all devices
+- Volume preferences stored in browser localStorage
+
+### Performance Optimization
+
+**For Slow Connections:**
+- Reduce `feedCacheTime` for faster podcast loading
+- Use `requiresProxy: false` when possible
+- Focus on audio-only streams (avoid video streams)
+
+**For Multiple Simultaneous Users:**
+- Increase `podcastTimeout` for busy servers
+- Use CDN-hosted stream URLs when available
+- Consider local caching proxy for corporate use
+
+**Battery Optimization (Mobile):**
+- Use WiFi instead of cellular for streaming
+- Close other browser tabs to reduce CPU usage
+- Lower volume reduces power consumption
+
+## 🧪 Testing & Validation
+
+### Testing Your Configuration
+
+**Step-by-Step Testing Process:**
+
+1. **Backup Original**: Always backup your working `config.json` first
+2. **Validate JSON**: Use online JSON validators to check syntax
+3. **Test Incrementally**: Add one station/podcast at a time
+4. **Check Console**: Open browser developer tools to see error messages
+5. **Test Playback**: Verify each new station/podcast actually works
+
+**Using the Test Configuration Tool:**
+
+Open `test-config.html` in your browser for advanced testing:
+
+- **Syntax Validation**: Automatically checks JSON syntax
+- **URL Testing**: Validates that stream URLs are accessible
+- **Feed Parsing**: Tests podcast RSS feeds
+- **Performance Analysis**: Shows loading times and response codes
+
+**Common Testing Commands:**
+
+```bash
+# Test JSON syntax
+cat config.json | python -m json.tool
+
+# Test stream URLs (requires curl)
+curl -I "https://your-stream-url.com/stream.mp3"
+
+# Validate RSS feeds
+curl -s "https://your-podcast-feed.com/rss" | head -20
+```
+
+### Debugging Common Issues
+
+**Configuration Not Loading:**
+- Check JSON syntax with browser console
+- Verify file permissions (should be readable)
+- Ensure file encoding is UTF-8
+
+**Streams Not Playing:**
+- Test URLs directly in browser
+- Check for geographic restrictions
+- Verify HTTPS/HTTP protocol consistency
+
+**Podcasts Not Loading:**
+- Test RSS feed URLs directly
+- Check `requiresProxy` setting
+- Verify RSS feed format is valid
+
+### Validation Checklist
+
+Before deploying your configuration:
+
+- [ ] JSON syntax is valid
+- [ ] All station IDs are unique
+- [ ] All podcast IDs are unique  
+- [ ] Stream URLs return 200 status codes
+- [ ] RSS feeds are accessible
+- [ ] Country names match exactly in stations and settings
+- [ ] Required proxy settings are configured
+- [ ] Volume levels are between 0-100
+- [ ] Cache times are reasonable (300-7200 seconds)
 
 ## Backup and Version Control
 
@@ -552,6 +1044,64 @@ The application handles CORS restrictions intelligently:
 - Reduce `podcastTimeout` for faster loading (but may cause timeouts)
 - Increase `feedCacheTime` to reduce server load
 - Limit `enabledCountries` to reduce initial load time
+
+## ❓ Frequently Asked Questions
+
+### General Usage
+
+**Q: Do I need to install anything to use this app?**
+A: No! Just download the files and open `index.html` in your browser. For podcast features, you may want to serve it via a local server, but it's not required for basic radio streaming.
+
+**Q: Why do some stations not work in my country?**
+A: Many radio stations have geographic restrictions (geo-blocking). Try using a VPN or look for international versions of the same stations.
+
+**Q: Can I use this on my phone/tablet?**
+A: Yes! The interface is fully responsive and optimized for mobile devices. All features work on mobile browsers.
+
+**Q: Does this app collect any personal data?**
+A: No. Everything runs locally in your browser. No data is sent to external servers except when fetching audio streams and RSS feeds directly from their sources.
+
+### Configuration & Setup
+
+**Q: How do I add my favorite radio station?**
+A: Find the station's streaming URL (see "Finding Stream URLs" section), then add it to your `config.json` file following the examples provided.
+
+**Q: Why don't podcasts work without a server?**
+A: Many podcast RSS feeds have CORS (Cross-Origin Resource Sharing) restrictions that prevent direct browser access. The included PHP proxy bypasses this limitation.
+
+**Q: Can I customize the appearance?**
+A: Yes! You can modify `style.css` for visual changes, or use the settings in `config.json` to control which countries and features are shown.
+
+**Q: How do I backup my configuration?**
+A: Simply copy your `config.json` file. It contains all your custom stations, podcasts, and settings.
+
+### Technical Issues
+
+**Q: A station was working but now it's not. What happened?**
+A: Radio stream URLs change frequently. Check the station's website for updated stream URLs, or try finding alternative streams using tools like Radio-Browser.info.
+
+**Q: Podcasts are loading slowly or not at all. How can I fix this?**
+A: Try setting `requiresProxy: true` for problematic feeds, increase the `podcastTimeout` value, or check if the RSS feed URL is still valid.
+
+**Q: Can I run this on a web server for multiple users?**
+A: Absolutely! Just upload all files to your web server. Make sure PHP is enabled for full podcast functionality.
+
+**Q: The app says "Please click play" instead of auto-playing. Why?**
+A: Modern browsers require user interaction before playing audio. This is a security feature. Just click the play button once to enable audio.
+
+### Advanced Usage
+
+**Q: Can I integrate this with other systems?**
+A: Yes! The app supports URL parameters for automation, and you can modify the JavaScript files to add custom integrations.
+
+**Q: How do I monitor multiple news sources simultaneously?**
+A: Open multiple browser tabs with different URL parameters, or create a custom configuration that includes all your desired sources.
+
+**Q: Can I add video streams, not just audio?**
+A: The current version is designed for audio only, but you could modify the code to support video streams using HTML5 video elements.
+
+**Q: Is there a way to schedule automatic playback?**
+A: You can use browser automation tools, bookmarks with URL parameters, or create simple HTML pages that auto-redirect with specific parameters.
 
 ## Support
 

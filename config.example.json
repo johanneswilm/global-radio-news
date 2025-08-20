@@ -14,6 +14,29 @@
           "name": "WDR 2",
           "description": "Regional News & Music",
           "url": "https://wdr-wdr2-rheinland.icecastssl.wdr.de/wdr/wdr2/rheinland/mp3/128/stream.mp3"
+        },
+        {
+          "id": "ndr-info-sh",
+          "name": "NDR Info Schleswig-Holstein",
+          "description": "Regional News & Information",
+          "url": "http://icecast.ndr.de/ndr/ndrinfo/schleswigholstein/mp3/128/stream.mp3"
+        },
+        {
+          "id": "ndr-kultur",
+          "name": "NDR Kultur",
+          "description": "Culture & News",
+          "url": "http://icecast.ndr.de/ndr/ndrkultur/live/mp3/128/stream.mp3"
+        }
+      ]
+    },
+    "Spain": {
+      "flag": "🇪🇸",
+      "stations": [
+        {
+          "id": "cadena-ser",
+          "name": "Cadena SER",
+          "description": "News & Talk",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3"
         }
       ]
     },
@@ -86,6 +109,25 @@
     }
   },
   "podcasts": {
+    "Spain": {
+      "flag": "🇪🇸",
+      "feeds": [
+        {
+          "id": "rne-diario",
+          "name": "RNE Diario Hablado",
+          "feedUrl": "https://www.rtve.es/api/programas/36019/audios.rss",
+          "type": "rss",
+          "requiresProxy": true
+        },
+        {
+          "id": "hora-25",
+          "name": "Hora 25",
+          "feedUrl": "https://fapi-top.prisasd.com/podcast/playser/hora_25/itunestfp/podcast.xml",
+          "type": "rss",
+          "requiresProxy": true
+        }
+      ]
+    },
     "Germany": {
       "flag": "🇩🇪",
       "feeds": [
@@ -100,6 +142,13 @@
           "id": "tagesschau",
           "name": "Tagesschau",
           "feedUrl": "https://www.tagesschau.de/export/video-podcast/webl/tagesschau-in-100-sekunden/",
+          "type": "rss",
+          "requiresProxy": true
+        },
+        {
+          "id": "ndr-info-podcast",
+          "name": "NDR Info Podcast",
+          "feedUrl": "https://www.ndr.de/nachrichten/info/podcast4684.xml",
           "type": "rss",
           "requiresProxy": true
         }
@@ -218,8 +267,8 @@
     "feedCacheTime": 3600,
     "podcastTimeout": 8000,
     "enabledCountries": {
-      "stations": ["Germany", "United Kingdom", "United States", "France"],
-      "podcasts": ["Germany", "United Kingdom", "United States", "Denmark"]
+      "stations": ["Germany", "Spain", "United Kingdom", "United States", "France"],
+      "podcasts": ["Germany", "Spain", "United Kingdom", "United States", "Denmark"]
     },
     "allowedDomains": [
       "api.dr.dk",
@@ -236,7 +285,16 @@
       "www.cbc.ca",
       "www.abc.net.au",
       "www.pbs.org",
-      "sindrel.github.io"
+      "sindrel.github.io",
+      "www.rtve.es",
+      "play.cadenaser.com",
+      "www.noticieros.televisa.com",
+      "www.ndr.de",
+      "ndr-ndrinfo-niedersachsen.sslcast.addradio.de",
+      "ndr-ndrkultur.sslcast.addradio.de",
+      "rtvelivestream.akamaized.net",
+      "playerservices.streamtheworld.com",
+      "radiopampa.cdnstream.com"
     ]
   }
 }
