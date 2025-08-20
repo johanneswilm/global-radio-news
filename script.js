@@ -246,6 +246,7 @@ class RadioNewsApp {
                 const episodeElement = podcastItem.querySelector('.podcast-episode');
                 const feedName = episodeElement.dataset.name;
                 const feedId = podcastItem.dataset.id;
+                this.playingAll = false; // Stop "play all" mode
                 this.playPodcastEpisode(episodeElement, feedName, feedId);
             });
         });
@@ -799,7 +800,6 @@ class RadioNewsApp {
         };
 
         this.currentStation = null; // Clear live station selection
-        this.playingAll = false; // Stop "play all" mode
 
         this.audioPlayer.src = audioUrl;
         this.updateStationInfo(title, feedName);
@@ -1227,7 +1227,6 @@ class RadioNewsApp {
 
         // Update clear history button
         if (this.clearHistoryBtn) {
-            const playedCount = this.getPlayedEpisodesCount();
             if (playedCount === 0) {
                 this.clearHistoryBtn.textContent = '🗑️ Clear History';
                 this.clearHistoryBtn.disabled = true;
@@ -1240,10 +1239,19 @@ class RadioNewsApp {
 }
 
 // Initialize the app when the DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
+    if (window.radioApp) return; // Prevent re-initialization
     window.radioApp = new RadioNewsApp();
-});
+}
 
+// Run immediately if DOM is already loaded
+if (document.readyState === 'loading') {
+    // Still loading, wait for the event
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    // Already ready, initialize now
+    initApp();
+}
 // Service Worker registration for PWA functionality
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

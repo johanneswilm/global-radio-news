@@ -1,7 +1,8 @@
 // Global Radio News Service Worker
-const CACHE_NAME = 'global-radio-news-v1.0.0';
-const STATIC_CACHE_NAME = 'static-v1.0.0';
-const RUNTIME_CACHE_NAME = 'runtime-v1.0.0';
+const CACHE_VERSION = Date.now();
+const CACHE_NAME = `global-radio-news-v${CACHE_VERSION}`;
+const STATIC_CACHE_NAME = `static-v${CACHE_VERSION}`;
+const RUNTIME_CACHE_NAME = `runtime-v${CACHE_VERSION}`;
 
 // Files to cache on install
 const STATIC_ASSETS = [
@@ -39,7 +40,14 @@ self.addEventListener('install', event => {
     caches.open(STATIC_CACHE_NAME)
       .then(cache => {
         console.log('[SW] Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
+        // Add cache-busting for hard refresh scenarios
+        const cacheBustingAssets = STATIC_ASSETS.map(asset => {
+          if (asset.includes('?')) {
+            return asset;
+          }
+          return asset.endsWith('./') ? asset : `${asset}?v=${CACHE_VERSION}`;
+        });
+        return cache.addAll(cacheBustingAssets.length > 0 ? cacheBustingAssets : STATIC_ASSETS);
       })
       .then(() => {
         console.log('[SW] Static assets cached successfully');
@@ -267,10 +275,41 @@ self.addEventListener('message', event => {
       );
       break;
       
+    case 'HARD_REFRESH':
+      console.log('[SW] Hard refresh requested');
+      event.waitUntil(clearAllCaches());
+      break;
+      
+    case 'FORCE_UPDATE':
+      event.waitUntil(
+        self.registration.update()
+          .then(() => {
+            console.log('[SW] Force update completed');
+            self.skipWaiting();
+          })
+      );
+      break;
+      
     default:
       console.log('[SW] Unknown message type:', type);
   }
 });
+
+// Clear all caches function
+async function clearAllCaches() {
+  try {
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames.map(cacheName => {
+        console.log('[SW] Clearing cache:', cacheName);
+        return caches.delete(cacheName);
+      })
+    );
+    console.log('[SW] All caches cleared');
+  } catch (error) {
+    console.error('[SW] Error clearing caches:', error);
+  }
+}
 
 // Periodic background fetch (for supported browsers)
 self.addEventListener('backgroundfetch', event => {

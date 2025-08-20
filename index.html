@@ -19,7 +19,6 @@
     <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" href="style.css">
-    <script src="config.js"></script>
     
     <!-- Early Service Worker Registration -->
     <script>
@@ -33,6 +32,112 @@
                         console.log('SW registration failed: ', registrationError);
                     });
             });
+        }
+
+        // Hard refresh functionality with Ctrl+F5, Ctrl+R, or Ctrl+Shift+R
+        document.addEventListener('keydown', function(event) {
+            // Check for Ctrl+F5, Ctrl+R, or Ctrl+Shift+R
+            if (event.ctrlKey && (event.key === 'F5' || event.key === 'r' || event.key === 'R')) {
+                event.preventDefault();
+                performHardRefresh();
+            }
+            // Alternative: Ctrl+Shift+R for hard refresh
+            if (event.ctrlKey && event.shiftKey && (event.key === 'r' || event.key === 'R')) {
+                event.preventDefault();
+                performHardRefresh();
+            }
+        });
+
+        function showHardRefreshOverlay() {
+            const overlay = document.createElement('div');
+            overlay.className = 'hard-refresh-overlay';
+            overlay.innerHTML = `
+                <div class="hard-refresh-content">
+                    <div class="hard-refresh-spinner"></div>
+                    <div class="hard-refresh-text">Hard Refresh in Progress</div>
+                    <div class="hard-refresh-subtitle">Clearing caches and reloading all assets...</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            return overlay;
+        }
+
+        async function performHardRefresh() {
+            console.log('🔄 Performing hard refresh...');
+            const overlay = showHardRefreshOverlay();
+            const startTime = Date.now();
+            
+            try {
+                // Small delay to show the overlay
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                console.log('📱 Unregistering service workers...');
+                // Unregister service worker
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        console.log('✅ Service worker unregistered:', registration.scope);
+                    }
+                    console.log(`🎯 Unregistered ${registrations.length} service worker(s)`);
+                } else {
+                    console.log('ℹ️ Service Worker not supported');
+                }
+
+                console.log('🗑️ Clearing all caches...');
+                // Clear all caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    let clearedCount = 0;
+                    for (const cacheName of cacheNames) {
+                        const deleted = await caches.delete(cacheName);
+                        if (deleted) {
+                            console.log('✅ Cache cleared:', cacheName);
+                            clearedCount++;
+                        }
+                    }
+                    console.log(`🎯 Cleared ${clearedCount} cache(s)`);
+                } else {
+                    console.log('ℹ️ Cache API not supported');
+                }
+
+                console.log('🎨 Refreshing CSS files...');
+                // Force reload CSS files
+                const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
+                cssLinks.forEach((link, index) => {
+                    const href = link.href.split('?')[0];
+                    const newHref = href + '?t=' + Date.now();
+                    link.href = newHref;
+                    console.log(`✅ CSS refreshed [${index + 1}]:`, href);
+                });
+
+                console.log('🔄 Preparing page reload...');
+                // Add cache-busting parameter to current URL and reload
+                const url = new URL(window.location);
+                url.searchParams.set('hardRefresh', Date.now());
+                
+                const duration = Date.now() - startTime;
+                console.log(`⚡ Hard refresh completed in ${duration}ms - reloading page...`);
+                
+                // Force reload the page bypassing cache
+                window.location.replace(url.toString());
+                
+            } catch (error) {
+                console.error('❌ Error during hard refresh:', error);
+                console.error('Error stack:', error.stack);
+                
+                // Remove overlay on error
+                if (overlay && overlay.parentNode) {
+                    overlay.parentNode.removeChild(overlay);
+                }
+                
+                // Show error message to user
+                alert('Hard refresh failed. Falling back to regular reload.\nError: ' + error.message);
+                
+                // Fallback to regular hard reload
+                console.log('🔄 Falling back to regular hard reload...');
+                window.location.reload(true);
+            }
         }
     </script>
 </head>
@@ -109,9 +214,49 @@
         <footer>
             <p>Listen to live news streams from public radio stations worldwide. All streams are provided by their respective broadcasters.</p>
             <p class="disclaimer">Note: Stream availability may vary. Some stations may have geographic restrictions.</p>
+            <p class="keyboard-shortcut">💡 Tip: Press <kbd>Ctrl+F5</kbd>, <kbd>Ctrl+R</kbd>, or <kbd>Ctrl+Shift+R</kbd> for hard refresh (clears all caches and forces reload of all assets)</p>
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Add cache-busting for JS files if hard refresh was triggered
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('hardRefresh')) {
+            console.log('🔥 Hard refresh detected - loading assets with cache-busting...');
+            const timestamp = Date.now();
+            
+            console.log('📄 Loading config.js with cache-busting...');
+            const configScript = document.createElement('script');
+            configScript.src = 'config.js?t=' + timestamp;
+            configScript.onload = () => console.log('✅ config.js loaded successfully');
+            configScript.onerror = () => console.error('❌ Failed to load config.js');
+            document.head.appendChild(configScript);
+            
+            console.log('📄 Loading script.js with cache-busting...');
+            const mainScript = document.createElement('script');
+            mainScript.src = 'script.js?t=' + timestamp;
+            mainScript.onload = () => console.log('✅ script.js loaded successfully - hard refresh complete!');
+            mainScript.onerror = () => console.error('❌ Failed to load script.js');
+            document.head.appendChild(mainScript);
+            
+            // Clean up URL after loading
+            window.history.replaceState({}, document.title, window.location.pathname);
+            console.log('🧹 URL cleaned up after hard refresh');
+        } else {
+            // Normal loading
+            console.log('📄 Loading assets normally...');
+            const configScript = document.createElement('script');
+            configScript.src = 'config.js';
+            configScript.onload = () => console.log('✅ config.js loaded');
+            configScript.onerror = () => console.error('❌ Failed to load config.js');
+            document.head.appendChild(configScript);
+            
+            const mainScript = document.createElement('script');
+            mainScript.src = 'script.js';
+            mainScript.onload = () => console.log('✅ script.js loaded');
+            mainScript.onerror = () => console.error('❌ Failed to load script.js');
+            document.head.appendChild(mainScript);
+        }
+    </script>
 </body>
 </html>
