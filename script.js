@@ -11,6 +11,7 @@ class RadioNewsApp {
         this.loading = document.getElementById('loading');
         this.statusMessage = document.getElementById('statusMessage');
         this.playAllBtn = document.getElementById('playAllPodcastsBtn');
+        this.clearHistoryBtn = document.getElementById('clearPlayedHistoryBtn');
 
         // Mode toggle elements
         this.liveBtn = document.getElementById('liveBtn');
@@ -254,6 +255,14 @@ class RadioNewsApp {
             this.playAllPodcasts();
         });
 
+        // Clear played history button
+        this.clearHistoryBtn?.addEventListener('click', () => {
+            if (confirm('This will clear all played episode history. Continue?')) {
+                this.clearPlayedEpisodes();
+                this.updatePlayAllButtonText();
+            }
+        });
+
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT') return; // Don't trigger on form inputs
@@ -300,6 +309,13 @@ class RadioNewsApp {
         this.audioPlayer.addEventListener('ended', () => {
             this.isPlaying = false;
             this.updatePlayButton();
+
+            // Mark current episode as played if it's a podcast
+            if (this.currentEpisode) {
+                const episodeId = this.getEpisodeId(this.currentEpisode.element, this.currentEpisode.feedName);
+                this.markEpisodeAsPlayed(episodeId);
+                this.updatePlayAllButtonText();
+            }
 
             // If playing all podcasts, move to next
             if (this.playingAll && this.podcastQueue.length > 0) {
@@ -598,6 +614,8 @@ class RadioNewsApp {
                         this.playAllBtn.disabled = false;
                     }
 
+                    this.updatePlayAllButtonText();
+
                     return; // Success, exit the retry loop
                 }
             } catch (error) {
@@ -614,7 +632,7 @@ class RadioNewsApp {
     parseEpisodeData(content, feedType, feedName) {
         try {
             if (feedType === 'json') {
-                // Handle JSON feeds (like DR API)
+                // Handle JSON feeds
                 const data = JSON.parse(content);
 
                 if (data.items && data.items.length > 0) {
@@ -660,10 +678,6 @@ class RadioNewsApp {
                 const enclosure = latestItem.querySelector('enclosure[type*="audio"]');
                 if (enclosure) {
                     audioUrl = enclosure.getAttribute('url');
-                    const lengthAttr = enclosure.getAttribute('length');
-                    if (lengthAttr && lengthAttr !== '0') {
-                        duration = parseInt(lengthAttr) * 1000; // Convert to milliseconds
-                    }
                 }
 
                 // Try media:content as fallback
@@ -746,6 +760,18 @@ class RadioNewsApp {
                 // Store audio URL in the episode element
                 episodeElement.dataset.audioUrl = episodeData.audioUrl;
                 episodeElement.dataset.disabled = "false";
+
+                // Check if this episode has been played and add visual indicator
+                const feedName = episodeElement.dataset.name;
+                const episodeId = this.getEpisodeId(episodeElement, feedName);
+                if (this.isEpisodePlayed(episodeId)) {
+                    episodeItem.classList.add('played');
+                    if (titleElement) {
+                        titleElement.textContent = '✓ ' + (episodeData.title || 'Untitled');
+                    }
+                } else {
+                    episodeItem.classList.remove('played');
+                }
             } else {
                 episodeElement.dataset.disabled = "true";
                 episodeItem.title = 'No audio available';
@@ -785,22 +811,40 @@ class RadioNewsApp {
 
     // Play all podcasts in sequence
     playAllPodcasts() {
-        const enabledEpisodes = Array.from(document.querySelectorAll('.podcast-item'))
+        const allEpisodes = Array.from(document.querySelectorAll('.podcast-episode'))
             .filter(episode => episode.dataset.disabled === "false" && episode.dataset.audioUrl);
 
-        if (enabledEpisodes.length === 0) {
+        if (allEpisodes.length === 0) {
             this.showStatus('No podcast episodes available to play', 'error');
             return;
         }
 
-        this.podcastQueue = enabledEpisodes;
+        // Filter out already played episodes
+        const unplayedEpisodes = allEpisodes.filter(episode => {
+            const feedName = episode.dataset.name;
+            const episodeId = this.getEpisodeId(episode, feedName);
+            return !this.isEpisodePlayed(episodeId);
+        });
+
+        if (unplayedEpisodes.length === 0) {
+            const playedCount = allEpisodes.length;
+            this.showStatus(`All ${playedCount} episodes have been played already. Clear history to play again.`, 'info');
+            return;
+        }
+
+        this.podcastQueue = unplayedEpisodes;
         this.currentQueueIndex = 0;
         this.playingAll = true;
 
-        // Start with the first episode
+        // Start with the first unplayed episode
         this.playNextInQueue();
 
-        this.showStatus(`Playing all podcasts (${enabledEpisodes.length} episodes)`, 'info');
+        const skippedCount = allEpisodes.length - unplayedEpisodes.length;
+        const statusMessage = skippedCount > 0
+            ? `Playing ${unplayedEpisodes.length} unplayed podcasts (skipped ${skippedCount} already played)`
+            : `Playing all podcasts (${unplayedEpisodes.length} episodes)`;
+
+        this.showStatus(statusMessage, 'info');
     }
 
     // Play the next episode in the queue
@@ -1080,6 +1124,118 @@ class RadioNewsApp {
     // Check if app is installed
     isAppInstalled() {
         return window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    }
+
+    // Episode tracking methods using localStorage
+    getEpisodeId(episodeElement, feedName) {
+        // Create a unique identifier for the episode using feed name and episode title/URL
+        let title = episodeElement.querySelector('.episode-title')?.textContent || '';
+
+        if (title.startsWith('✓ ')) {
+            title = title.substring(2);
+        }
+
+        const audioUrl = episodeElement.dataset.audioUrl || '';
+        const pubDate = episodeElement.querySelector('.episode-date')?.textContent || '';
+
+        // Create a hash-like ID using feed name, title, and date to uniquely identify episodes
+        const identifier = `${feedName}::${title}::${pubDate}::${audioUrl}`;
+        return btoa(identifier).replace(/[^a-zA-Z0-9]/g, ''); // Base64 encode and clean
+    }
+
+    isEpisodePlayed(episodeId) {
+        const playedEpisodes = this.getPlayedEpisodes();
+        return playedEpisodes.includes(episodeId);
+    }
+
+    markEpisodeAsPlayed(episodeId) {
+        const playedEpisodes = this.getPlayedEpisodes();
+        if (!playedEpisodes.includes(episodeId)) {
+            playedEpisodes.push(episodeId);
+            localStorage.setItem('playedEpisodes', JSON.stringify(playedEpisodes));
+
+            // Update visual indicator for this episode
+            if (this.currentEpisode) {
+                const episodeItem = this.currentEpisode.element.closest('.podcast-item');
+                const titleElement = this.currentEpisode.element.querySelector('.episode-title');
+                if (episodeItem) {
+                    episodeItem.classList.add('played');
+                }
+                if (titleElement && !titleElement.textContent.startsWith('✓ ')) {
+                    titleElement.textContent = '✓ ' + titleElement.textContent;
+                }
+            }
+        }
+    }
+
+    getPlayedEpisodes() {
+        try {
+            const stored = localStorage.getItem('playedEpisodes');
+            return stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.warn('Error reading played episodes from localStorage:', error);
+            return [];
+        }
+    }
+
+    clearPlayedEpisodes() {
+        const playedCount = this.getPlayedEpisodesCount();
+        localStorage.removeItem('playedEpisodes');
+
+        // Remove visual indicators from all episodes
+        const allPlayedItems = document.querySelectorAll('.podcast-item.played');
+        allPlayedItems.forEach(item => {
+            item.classList.remove('played');
+            const titleElement = item.querySelector('.episode-title');
+            if (titleElement && titleElement.textContent.startsWith('✓ ')) {
+                titleElement.textContent = titleElement.textContent.substring(2);
+            }
+        });
+
+        this.showStatus(`${playedCount} played episode${playedCount === 1 ? '' : 's'} cleared from history`, 'info');
+    }
+
+    getPlayedEpisodesCount() {
+        return this.getPlayedEpisodes().length;
+    }
+
+    updatePlayAllButtonText() {
+        if (!this.playAllBtn) return;
+
+        const allEpisodes = Array.from(document.querySelectorAll('.podcast-episode'))
+            .filter(episode => episode.dataset.disabled === "false" && episode.dataset.audioUrl);
+
+        const unplayedEpisodes = allEpisodes.filter(episode => {
+            const feedName = episode.dataset.name;
+            const episodeId = this.getEpisodeId(episode, feedName);
+            return !this.isEpisodePlayed(episodeId);
+        });
+
+        const totalCount = allEpisodes.length;
+        const unplayedCount = unplayedEpisodes.length;
+        const playedCount = totalCount - unplayedCount;
+
+        if (playedCount === 0) {
+            this.playAllBtn.textContent = '🔄 Play All News Podcasts';
+        } else if (unplayedCount === 0) {
+            this.playAllBtn.textContent = `🔄 All ${totalCount} Episodes Played`;
+            this.playAllBtn.disabled = true;
+        } else {
+            this.playAllBtn.textContent = `🔄 Play ${unplayedCount} Unplayed Episodes`;
+            this.playAllBtn.disabled = false;
+        }
+
+        // Update clear history button
+        if (this.clearHistoryBtn) {
+            const playedCount = this.getPlayedEpisodesCount();
+            if (playedCount === 0) {
+                this.clearHistoryBtn.textContent = '🗑️ Clear History';
+                this.clearHistoryBtn.disabled = true;
+            } else {
+                this.clearHistoryBtn.textContent = `🗑️ Clear History (${playedCount})`;
+                this.clearHistoryBtn.disabled = false;
+            }
+        }
     }
 }
 

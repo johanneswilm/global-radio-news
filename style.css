@@ -232,6 +232,7 @@ main {
 .play-all-container {
     display: flex;
     justify-content: center;
+    gap: 1rem;
     margin-bottom: 2rem;
 }
 
@@ -264,6 +265,32 @@ main {
     background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
     animation: pulse 2s infinite;
+}
+
+.clear-history-btn {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    border: none;
+    border-radius: 25px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.clear-history-btn:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+}
+
+.clear-history-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 @keyframes pulse {
@@ -393,6 +420,22 @@ main {
     font-style: italic;
 }
 
+.podcast-item.played {
+    background: rgba(149, 165, 166, 0.2);
+    border-color: rgba(149, 165, 166, 0.4);
+    opacity: 0.7;
+}
+
+.podcast-item.played .episode-title {
+    color: #7f8c8d;
+    text-decoration: line-through;
+}
+
+.podcast-item.played:hover {
+    background: rgba(149, 165, 166, 0.3);
+    opacity: 0.9;
+}
+
 /* Loading Indicator */
 .loading {
     text-align: center;
@@ -480,7 +523,8 @@ footer p {
         grid-template-columns: 1fr;
     }
 
-    .play-all-btn {
+    .play-all-btn,
+    .clear-history-btn {
         padding: 0.7rem 1.2rem;
         font-size: 1rem;
     }
@@ -561,7 +605,8 @@ footer p {
         font-size: 0.95rem;
     }
 
-    .play-all-btn {
+    .play-all-btn,
+    .clear-history-btn {
         padding: 0.6rem 1rem;
         font-size: 0.95rem;
     }
@@ -603,6 +648,16 @@ footer p {
 
     .station-btn:hover, .podcast-item:hover {
         background: rgba(52, 73, 94, 0.9);
+    }
+
+    .podcast-item.played {
+        background: rgba(127, 140, 141, 0.3);
+        border-color: rgba(127, 140, 141, 0.5);
+        opacity: 0.6;
+    }
+
+    .podcast-item.played .episode-title {
+        color: #95a5a6;
     }
 
     .podcast-title, .episode-title {
