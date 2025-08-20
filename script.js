@@ -435,7 +435,7 @@ class RadioNewsApp {
         }
 
         // Stop current playback
-        this.stop();
+        //this.stop();
     }
 
     // Load RSS feeds for all podcast items
@@ -508,7 +508,6 @@ class RadioNewsApp {
 
     // Parse episode data from RSS item
     parseEpisodeData(item) {
-        console.log({item, html: item.outerHTML});
         const title = this.cleanText(item.querySelector('title')?.textContent || 'Untitled Episode');
         const pubDate = item.querySelector('pubDate')?.textContent || '';
 
