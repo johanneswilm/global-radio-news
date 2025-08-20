@@ -1,0 +1,156 @@
+{
+  "stations": {
+    "Germany": {
+      "flag": "🇩🇪",
+      "stations": [
+        {
+          "id": "dlf",
+          "name": "Deutschlandfunk",
+          "description": "News & Current Affairs",
+          "url": "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3"
+        }
+      ]
+    },
+    "Denmark": {
+      "flag": "🇩🇰",
+      "stations": [
+        {
+          "id": "dr-p1",
+          "name": "DR P1",
+          "description": "News & Talk",
+          "url": "https://live-icy.dr.dk/A/A03H.mp3"
+        }
+      ]
+    },
+    "Norway": {
+      "flag": "🇳🇴",
+      "stations": [
+        {
+          "id": "nrk-p2",
+          "name": "NRK P2",
+          "description": "Culture & News",
+          "url": "https://lyd.nrk.no/nrk_radio_p2_mp3_h"
+        }
+      ]
+    },
+    "Sweden": {
+      "flag": "🇸🇪",
+      "stations": [
+        {
+          "id": "sr-p1",
+          "name": "SR P1",
+          "description": "News & Current Affairs",
+          "url": "https://http-live.sr.se/p1-mp3-192"
+        }
+      ]
+    },
+    "United Kingdom": {
+      "flag": "🇬🇧",
+      "stations": [
+        {
+          "id": "bbc-radio4",
+          "name": "BBC Radio 4",
+          "description": "News, Current Affairs & Drama",
+          "url": "https://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p"
+        }
+      ]
+    },
+    "United States": {
+      "flag": "🇺🇸",
+      "stations": [
+        {
+          "id": "npr",
+          "name": "NPR Live",
+          "description": "National Public Radio",
+          "url": "https://npr-ice.streamguys1.com/live.mp3"
+        },
+        {
+          "id": "wnyc",
+          "name": "WNYC",
+          "description": "New York Public Radio",
+          "url": "https://fm939.wnyc.org/wnycfm"
+        }
+      ]
+    }
+  },
+  "podcasts": {
+    "Denmark": {
+      "flag": "🇩🇰",
+      "feeds": [
+        {
+          "id": "radioavisen",
+          "name": "Radioavisen",
+          "feedUrl": "https://api.dr.dk/podcasts/v1/feeds/radioavisen",
+          "type": "rss",
+          "requiresProxy": true
+        }
+      ]
+    },
+    "Sweden": {
+      "flag": "🇸🇪",
+      "feeds": [
+        {
+          "id": "ekot",
+          "name": "Ekot",
+          "feedUrl": "https://api.sr.se/api/rss/pod/3795",
+          "type": "rss",
+          "requiresProxy": false
+        }
+      ]
+    },
+    "Germany": {
+      "flag": "🇩🇪",
+      "feeds": [
+        {
+          "id": "dlf-nachrichten",
+          "name": "DLF Nachrichten",
+          "feedUrl": "https://www.deutschlandfunk.de/nachrichten-108.xml",
+          "type": "rss",
+          "requiresProxy": true
+        }
+      ]
+    },
+    "United Kingdom": {
+      "flag": "🇬🇧",
+      "feeds": [
+        {
+          "id": "bbc-news-summary",
+          "name": "BBC News Summary",
+          "feedUrl": "https://podcasts.files.bbci.co.uk/p02nq0gn.rss",
+          "type": "rss",
+          "requiresProxy": false
+        }
+      ]
+    },
+    "United States": {
+      "flag": "🇺🇸",
+      "feeds": [
+        {
+          "id": "npr-news-now",
+          "name": "NPR News Now",
+          "feedUrl": "https://feeds.npr.org/500005/podcast.xml",
+          "type": "rss",
+          "requiresProxy": true
+        },
+        {
+          "id": "up-first",
+          "name": "Up First",
+          "feedUrl": "https://feeds.simplecast.com/54nAGcIl",
+          "type": "rss",
+          "requiresProxy": false
+        }
+      ]
+    }
+  },
+  "settings": {
+    "title": "Global Radio News",
+    "description": "Stream the latest news from public radio stations worldwide",
+    "defaultVolume": 70,
+    "feedCacheTime": 3600,
+    "podcastTimeout": 5000,
+    "enabledCountries": {
+      "stations": ["Germany", "Denmark", "Norway", "Sweden", "United Kingdom", "United States"],
+      "podcasts": ["Denmark", "Sweden", "Germany", "United Kingdom", "United States"]
+    }
+  }
+}

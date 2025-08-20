@@ -296,8 +296,9 @@ main {
     gap: 1rem;
 }
 
-/* Station Buttons */
-.station-btn {
+/* Station Buttons + Podcast Items */
+.station-btn,
+.podcast-item {
     background: rgba(255, 255, 255, 0.8);
     border: 2px solid rgba(103, 126, 234, 0.2);
     border-radius: 15px;
@@ -308,24 +309,19 @@ main {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.station-btn:hover {
+.station-btn:hover,
+.podcast-item:hover {
     background: rgba(103, 126, 234, 0.1);
     border-color: rgba(103, 126, 234, 0.5);
     transform: translateY(-2px);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
 }
 
-.station-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-color: transparent;
-    box-shadow: 0 6px 25px rgba(103, 126, 234, 0.4);
-}
-
-.station-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+.station-btn.active,
+.podcast-item.active {
+    background: linear-gradient(135deg, rgba(192, 57, 43, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-color: rgba(192, 57, 43, 0.6);
+    box-shadow: 0 6px 25px rgba(192, 57, 43, 0.2);
 }
 
 .station-desc {
@@ -337,22 +333,6 @@ main {
     opacity: 0.9;
 }
 
-/* Podcast Items */
-.podcast-item {
-    background: rgba(255, 255, 255, 0.8);
-    border: 2px solid rgba(103, 126, 234, 0.2);
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.podcast-item:hover {
-    background: rgba(103, 126, 234, 0.1);
-    border-color: rgba(103, 126, 234, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-}
 
 .podcast-header {
     margin-bottom: 1rem;
@@ -360,6 +340,7 @@ main {
     border-bottom: 1px solid rgba(103, 126, 234, 0.2);
 }
 
+.station-title,
 .podcast-title {
     font-size: 1.2rem;
     font-weight: 600;
@@ -405,42 +386,6 @@ main {
 
 .episode-date, .episode-duration {
     white-space: nowrap;
-}
-
-.podcast-play-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-}
-
-.podcast-play-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.podcast-play-btn:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-.podcast-item.playing {
-    background: linear-gradient(135deg, rgba(103, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-    border-color: rgba(103, 126, 234, 0.6);
-    box-shadow: 0 6px 25px rgba(103, 126, 234, 0.2);
-}
-
-.podcast-item.playing .podcast-play-btn {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
 }
 
 .podcast-item.loading .episode-title {
@@ -522,60 +467,60 @@ footer p {
     .container {
         padding: 15px;
     }
-    
+
     header h1 {
         font-size: 2rem;
     }
-    
+
     header, .player-section, .stations-section, .podcast-section, footer {
         padding: 1.5rem;
     }
-    
+
     .station-grid, .podcast-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .play-all-btn {
         padding: 0.7rem 1.2rem;
         font-size: 1rem;
     }
-    
+
     .mode-toggle {
         gap: 0.5rem;
         padding: 0.3rem;
     }
-    
+
     .mode-btn {
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
     }
-    
+
     .podcast-episode {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
-    
+
     .episode-meta {
         gap: 0.5rem;
         font-size: 0.8rem;
     }
-    
+
     .player-controls {
         flex-direction: column;
         gap: 1.5rem;
     }
-    
+
     .volume-control {
         order: -1;
         width: 100%;
         justify-content: center;
     }
-    
+
     #volumeSlider {
         width: 200px;
     }
-    
+
     .control-btn {
         width: 70px;
         height: 70px;
@@ -587,35 +532,35 @@ footer p {
     header h1 {
         font-size: 1.8rem;
     }
-    
+
     header p {
         font-size: 1rem;
     }
-    
+
     .station-btn {
         padding: 1rem;
     }
-    
+
     .station-title {
         font-size: 1.1rem;
     }
-    
+
     .stations-section h2, .podcast-section h2 {
         font-size: 1.6rem;
     }
-    
+
     .country-section h3 {
         font-size: 1.1rem;
     }
-    
+
     .podcast-title {
         font-size: 1.1rem;
     }
-    
+
     .episode-title {
         font-size: 0.95rem;
     }
-    
+
     .play-all-btn {
         padding: 0.6rem 1rem;
         font-size: 0.95rem;
@@ -628,46 +573,46 @@ footer p {
         background: rgba(44, 62, 80, 0.95);
         color: #ecf0f1;
     }
-    
+
     .mode-toggle {
         background: rgba(44, 62, 80, 0.9);
     }
-    
+
     .station-info {
         background: rgba(52, 73, 94, 0.8);
         border-color: rgba(52, 73, 94, 0.5);
     }
-    
+
     .station-name {
         color: #ecf0f1;
     }
-    
+
     .station-country {
         color: #bdc3c7;
     }
-    
+
     .stations-section h2, .podcast-section h2, .country-section h3 {
         color: #ecf0f1;
     }
-    
+
     .station-btn, .podcast-item {
         background: rgba(52, 73, 94, 0.8);
         color: #ecf0f1;
         border-color: rgba(127, 140, 141, 0.3);
     }
-    
+
     .station-btn:hover, .podcast-item:hover {
         background: rgba(52, 73, 94, 0.9);
     }
-    
+
     .podcast-title, .episode-title {
         color: #ecf0f1;
     }
-    
+
     .podcast-country, .episode-meta {
         color: #bdc3c7;
     }
-    
+
     footer {
         background: rgba(44, 62, 80, 0.8);
         color: rgba(236, 240, 241, 0.8);
@@ -680,13 +625,181 @@ footer p {
         background: white;
         color: black;
     }
-    
+
     .player-section, .stations-section, .podcast-section {
         background: white;
         border: 1px solid #ccc;
     }
-    
+
     .control-btn, #audioPlayer, .loading, .podcast-play-btn, .mode-toggle {
         display: none;
     }
+}
+
+/* PWA and Offline Styles */
+.offline-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ff9800;
+    color: white;
+    text-align: center;
+    padding: 8px 16px;
+    z-index: 1000;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Update notification */
+.update-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.update-notification button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-left: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.update-notification button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* PWA install prompt */
+.install-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: #667eea;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    z-index: 1002;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease-out;
+}
+
+.install-prompt .install-buttons {
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.install-prompt button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.install-prompt button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.install-prompt button.primary {
+    background: white;
+    color: #667eea;
+    border: none;
+}
+
+.install-prompt button.primary:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+/* Loading spinner for PWA features */
+.pwa-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* Responsive adjustments for PWA elements */
+@media screen and (max-width: 768px) {
+    .offline-indicator {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .update-notification,
+    .install-prompt {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .install-prompt .install-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .install-prompt button {
+        margin: 4px 0;
+    }
+}
+
+/* Hide elements when offline for better UX */
+body.offline .network-dependent {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+body.offline .network-dependent::after {
+    content: " (Offline)";
+    font-size: 0.8em;
+    color: #999;
 }

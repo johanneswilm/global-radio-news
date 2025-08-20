@@ -6,10 +6,17 @@
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#2c3e50",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "categories": ["news", "music", "entertainment"],
   "lang": "en",
   "dir": "ltr",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
   "icons": [
     {
       "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23667eea' rx='20'/><text x='96' y='130' font-size='100' text-anchor='middle' fill='white'>📻</text></svg>",

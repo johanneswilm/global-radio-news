@@ -293,9 +293,276 @@ These podcast apps can import the combined feed and offer better playback contro
 - **AntennaPod** - Open "Add Podcast" → "RSS address" and enter the feed URL
 - **Pocket Casts** - Use "Add by URL" in the library section
 
----
+## Configuration File Structure
 
-For any issues or questions, please open an issue on the GitHub repository.
+The configuration is stored in `config.json` with the following structure:
+
+```json
+{
+  "stations": { ... },
+  "podcasts": { ... },
+  "settings": { ... }
+}
+```
+
+## Stations Configuration
+
+Define live radio streams organized by country:
+
+```json
+"stations": {
+  "Country Name": {
+    "flag": "🇺🇸",
+    "stations": [
+      {
+        "id": "unique-station-id",
+        "name": "Station Name",
+        "description": "Brief description",
+        "url": "https://stream-url.com/stream.mp3"
+      }
+    ]
+  }
+}
+```
+
+### Station Properties
+
+- **id**: Unique identifier for the station (used in URLs)
+- **name**: Display name of the station
+- **description**: Brief description shown under the station name
+- **url**: Direct URL to the audio stream (MP3, AAC, etc.)
+
+## Podcasts Configuration
+
+Define podcast RSS feeds organized by country:
+
+```json
+"podcasts": {
+  "Country Name": {
+    "flag": "🇺🇸",
+    "feeds": [
+      {
+        "id": "unique-podcast-id",
+        "name": "Podcast Name",
+        "feedUrl": "https://example.com/rss",
+        "type": "rss",
+        "requiresProxy": false
+      }
+    ]
+  }
+}
+```
+
+### Podcast Properties
+
+- **id**: Unique identifier for the podcast
+- **name**: Display name of the podcast
+- **feedUrl**: URL to the RSS feed or API endpoint
+- **type**: Feed type - either "rss" (standard RSS/XML) or "json" (for special APIs like DR)
+- **requiresProxy**: Boolean indicating if this feed must always use the server-side proxy due to CORS restrictions
+
+## Settings Configuration
+
+Application-wide settings:
+
+```json
+"settings": {
+  "title": "Global Radio News",
+  "description": "Stream the latest news from public radio stations worldwide",
+  "defaultVolume": 70,
+  "feedCacheTime": 3600,
+  "podcastTimeout": 5000,
+  "enabledCountries": {
+    "stations": ["Germany", "United States", "United Kingdom"],
+    "podcasts": ["Germany", "United States", "United Kingdom"]
+  }
+}
+```
+
+### Settings Properties
+
+- **title**: Application title (shown in header and browser title)
+- **description**: Application description (shown in header)
+- **defaultVolume**: Default volume level (0-100)
+- **feedCacheTime**: RSS feed cache time in seconds (for PHP backend)
+- **podcastTimeout**: Timeout for podcast feed requests in milliseconds
+- **enabledCountries**: Control which countries appear in the interface
+  - **stations**: Array of country names to show in live streams
+  - **podcasts**: Array of country names to show in podcast section
+
+## Customization Examples
+
+### CORS and Proxy Settings
+
+Some podcast feeds require the server-side proxy due to CORS (Cross-Origin Resource Sharing) restrictions. Use the `requiresProxy` setting to control this:
+
+- **requiresProxy: true** - Always use the server-side proxy (slower, but bypasses CORS)
+- **requiresProxy: false** - Try direct access first, fallback to proxy if needed (faster)
+
+```json
+{
+  "id": "dr-radioavisen",
+  "name": "DR Radioavisen",
+  "feedUrl": "https://api.dr.dk/podcasts/v1/feeds/radioavisen",
+  "type": "json",
+  "requiresProxy": true
+}
+```
+
+### Adding a New Station
+
+```json
+"stations": {
+  "France": {
+    "flag": "🇫🇷",
+    "stations": [
+      {
+        "id": "france-info",
+        "name": "France Info",
+        "description": "National News Channel",
+        "url": "https://direct.franceinfo.fr/live/franceinfo-midfi.mp3"
+      }
+    ]
+  }
+}
+```
+
+### Adding Multiple Stations per Country
+
+```json
+"United States": {
+  "flag": "🇺🇸",
+  "stations": [
+    {
+      "id": "npr",
+      "name": "NPR Live",
+      "description": "National Public Radio",
+      "url": "https://npr-ice.streamguys1.com/live.mp3"
+    },
+    {
+      "id": "wnyc",
+      "name": "WNYC",
+      "description": "New York Public Radio",
+      "url": "https://fm939.wnyc.org/wnycfm"
+    }
+  ]
+}
+```
+
+### Limiting Visible Countries
+
+To show only specific countries, use the `enabledCountries` setting:
+
+```json
+"settings": {
+  "enabledCountries": {
+    "stations": ["United States", "United Kingdom"],
+    "podcasts": ["United States"]
+  }
+}
+```
+
+This will hide all other countries from the interface.
+
+## URL Parameters
+
+The application supports URL parameters for direct linking:
+
+- `?station=station-id` - Auto-select and play a specific station
+- `?podcast=podcast-id&mode=podcast` - Auto-select and play a specific podcast
+- `?mode=podcast` - Switch to podcast mode
+- `?mode=live` - Switch to live streams mode
+
+Example: `https://yoursite.com/index.html?station=bbc-radio4`
+
+## Finding Stream URLs
+
+### Radio Streams
+
+1. **Radio-Browser.info**: Search for stations and copy stream URLs
+2. **Station Websites**: Look for "Listen Live" links
+3. **Browser Developer Tools**: Inspect network traffic when playing streams
+
+### Podcast Feeds
+
+1. **Podcast Websites**: Look for RSS feed links
+2. **Podcast Directories**: Apple Podcasts, Spotify (may require conversion)
+3. **Public Radio APIs**: Some broadcasters provide JSON APIs
+
+## Testing Configuration
+
+1. Save your changes to `config.json`
+2. Refresh the webpage
+3. Check browser console for any configuration errors
+4. Test that new stations/podcasts load and play correctly
+
+## Backup and Version Control
+
+- Keep a backup of your working `config.json`
+- Use `config.example.json` as a reference
+- Consider version controlling your customizations
+
+## Troubleshooting
+
+### Configuration Not Loading
+
+- Check JSON syntax using a JSON validator
+- Ensure `config.json` is in the same directory as `index.html`
+- Check browser console for error messages
+
+### Streams Not Playing
+
+- Verify stream URLs are still active
+- Check for CORS issues (some streams may require proxy)
+- Test stream URLs directly in browser
+
+### Podcasts Not Loading
+
+- Verify RSS feed URLs are accessible
+- Check feed format (RSS vs JSON)
+- Some feeds may require CORS proxy (`proxy.php`)
+
+## Advanced Configuration
+
+### Custom CORS Proxy
+
+If you need to access feeds that block CORS, modify the proxy URL in the settings or implement your own proxy solution.
+
+### Feed Types
+
+- **RSS**: Standard RSS 2.0 XML feeds
+- **JSON**: Special JSON APIs (currently supports DR API format)
+
+### CORS Proxy Behavior
+
+The application handles CORS restrictions intelligently:
+
+1. **requiresProxy: false** (default)
+   - Tries direct fetch first (faster)
+   - Falls back to proxy if CORS blocked
+   - Best for feeds that may or may not have CORS restrictions
+
+2. **requiresProxy: true**
+   - Always uses server-side proxy
+   - Slower but reliable for feeds with strict CORS policies
+   - Required for APIs like DR, SR, and some European broadcasters
+
+### Performance Optimization
+
+- Reduce `podcastTimeout` for faster loading (but may cause timeouts)
+- Increase `feedCacheTime` to reduce server load
+- Limit `enabledCountries` to reduce initial load time
+
+## Support
+
+For issues with configuration or adding new stations/podcasts, check:
+
+1. Browser developer console for errors
+2. Network tab for failed requests
+3. Station/podcast provider documentation
+4. CORS proxy functionality
+
+Remember to test thoroughly after making configuration changes.
 
 ## Contributing
 
@@ -322,3 +589,7 @@ This project is open source. Please respect the terms of use of individual radio
 ---
 
 **Note**: Stream URLs and RSS feeds may change over time. This app provides a simple interface to public streams and podcasts but does not guarantee availability. The app uses third-party CORS proxy services for RSS feeds - for production use, consider hosting your own proxy. Please respect the terms of service of individual broadcasters and podcast publishers.
+
+---
+
+For any issues or questions, please open an issue on the GitHub repository.

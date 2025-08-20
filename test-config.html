@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Test - Global Radio News</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f5f5f5;
+            padding: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-content {
+            padding: 15px;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fafafa;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+
+        .test-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .test-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .test-url {
+            flex: 2;
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+            margin: 0 10px;
+            word-break: break-all;
+        }
+
+        .test-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .status-loading {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-proxy {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .error-details {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #742a2a;
+        }
+
+        .config-info {
+            background: #f0f8ff;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .log-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📻 Configuration Test Tool</h1>
+            <p>Test your Global Radio News configuration for CORS issues and feed availability</p>
+        </div>
+
+        <div class="content">
+            <div class="config-info" id="configInfo">
+                <strong>Loading configuration...</strong>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    PWA Status
+                </div>
+                <div class="section-content" id="pwaStatus">
+                    <div class="test-item">
+                        <div class="test-name">Service Worker</div>
+                        <div class="test-status status-loading" id="swStatus">Checking...</div>
+                    </div>
+                    <div class="test-item">
+                        <div class="test-name">Cache Status</div>
+                        <div class="test-status status-loading" id="cacheStatus">Checking...</div>
+                    </div>
+                    <div class="test-item">
+                        <div class="test-name">Install Status</div>
+                        <div class="test-status status-loading" id="installStatus">Checking...</div>
+                    </div>
+                    <div class="test-item">
+                        <div class="test-name">Offline Capability</div>
+                        <div class="test-status status-loading" id="offlineStatus">Checking...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" id="testAllBtn">Test All Feeds</button>
+                <button class="btn" id="testStationsBtn">Test Station Streams</button>
+                <button class="btn" id="testPodcastsBtn">Test Podcast Feeds</button>
+                <button class="btn" id="clearLogBtn">Clear Log</button>
+                <button class="btn" id="testPwaBtn">Test PWA Features</button>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    Radio Stations Test
+                </div>
+                <div class="section-content" id="stationsTest">
+                    <!-- Station tests will be inserted here -->
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    Podcast Feeds Test
+                </div>
+                <div class="section-content" id="podcastsTest">
+                    <!-- Podcast tests will be inserted here -->
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    Test Log
+                </div>
+                <div class="section-content">
+                    <div class="log-output" id="logOutput"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ConfigurationTester {
+            constructor() {
+                this.config = null;
+                this.corsProxy = './proxy.php?url=';
+                this.log = document.getElementById('logOutput');
+                this.init();
+            }
+
+            async init() {
+                try {
+                    await this.loadConfig();
+                    this.setupUI();
+                    this.setupEventListeners();
+                    this.logMessage('Configuration loaded successfully');
+                } catch (error) {
+                    this.logError('Failed to load configuration', error);
+                    document.getElementById('configInfo').innerHTML = 
+                        '<strong style="color: red;">Error:</strong> Failed to load config.json - ' + error.message;
+                }
+            }
+
+            async loadConfig() {
+                const response = await fetch('config.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                this.config = await response.json();
+                
+                // Display config info
+                const enabledStations = this.config.settings?.enabledCountries?.stations?.length || 'All';
+                const enabledPodcasts = this.config.settings?.enabledCountries?.podcasts?.length || 'All';
+                const totalStations = this.getTotalStations();
+                const totalPodcasts = this.getTotalPodcasts();
+
+                document.getElementById('configInfo').innerHTML = `
+                    <strong>Configuration Summary:</strong><br>
+                    • Title: ${this.config.settings?.title || 'Global Radio News'}<br>
+                    • Radio Stations: ${totalStations} total (${enabledStations} countries enabled)<br>
+                    • Podcast Feeds: ${totalPodcasts} total (${enabledPodcasts} countries enabled)<br>
+                    • Default Volume: ${this.config.settings?.defaultVolume || 70}%<br>
+                    • Podcast Timeout: ${this.config.settings?.podcastTimeout || 5000}ms
+                `;
+            }
+
+            getTotalStations() {
+                let total = 0;
+                for (const country in this.config.stations || {}) {
+                    total += this.config.stations[country].stations?.length || 0;
+                }
+                return total;
+            }
+
+            getTotalPodcasts() {
+                let total = 0;
+                for (const country in this.config.podcasts || {}) {
+                    total += this.config.podcasts[country].feeds?.length || 0;
+                }
+                return total;
+            }
+
+            setupUI() {
+                this.createStationTests();
+                this.createPodcastTests();
+            }
+
+            createStationTests() {
+                const container = document.getElementById('stationsTest');
+                const enabledCountries = this.config.settings?.enabledCountries?.stations || [];
+                
+                for (const [country, countryData] of Object.entries(this.config.stations || {})) {
+                    if (enabledCountries.length > 0 && !enabledCountries.includes(country)) {
+                        continue;
+                    }
+
+                    for (const station of countryData.stations || []) {
+                        const testItem = document.createElement('div');
+                        testItem.className = 'test-item';
+                        testItem.innerHTML = `
+                            <div class="test-name">${countryData.flag} ${station.name}</div>
+                            <div class="test-url">${station.url}</div>
+                            <div class="test-status status-loading" id="station-${station.id}">Ready</div>
+                        `;
+                        container.appendChild(testItem);
+                    }
+                }
+            }
+
+            createPodcastTests() {
+                const container = document.getElementById('podcastsTest');
+                const enabledCountries = this.config.settings?.enabledCountries?.podcasts || [];
+                
+                for (const [country, countryData] of Object.entries(this.config.podcasts || {})) {
+                    if (enabledCountries.length > 0 && !enabledCountries.includes(country)) {
+                        continue;
+                    }
+
+                    for (const feed of countryData.feeds || []) {
+                        const testItem = document.createElement('div');
+                        testItem.className = 'test-item';
+                        testItem.innerHTML = `
+                            <div class="test-name">${countryData.flag} ${feed.name}</div>
+                            <div class="test-url">${feed.feedUrl} ${feed.requiresProxy ? '(requires proxy)' : ''}</div>
+                            <div class="test-status status-loading" id="podcast-${feed.id}">Ready</div>
+                        `;
+                        container.appendChild(testItem);
+                    }
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('testAllBtn').addEventListener('click', () => this.testAll());
+                document.getElementById('testStationsBtn').addEventListener('click', () => this.testStations());
+                document.getElementById('testPodcastsBtn').addEventListener('click', () => this.testPodcasts());
+                document.getElementById('clearLogBtn').addEventListener('click', () => this.clearLog());
+                document.getElementById('testPwaBtn').addEventListener('click', () => this.testPWAFeatures());
+            }
+
+            async testAll() {
+                this.logMessage('Starting comprehensive test...');
+                await this.testStations();
+                await this.testPodcasts();
+                this.logMessage('All tests completed');
+            }
+
+            async testStations() {
+                this.logMessage('Testing radio stations...');
+                const enabledCountries = this.config.settings?.enabledCountries?.stations || [];
+                
+                for (const [country, countryData] of Object.entries(this.config.stations || {})) {
+                    if (enabledCountries.length > 0 && !enabledCountries.includes(country)) {
+                        continue;
+                    }
+
+                    for (const station of countryData.stations || []) {
+                        await this.testStation(station);
+                    }
+                }
+            }
+
+            async testPodcasts() {
+                this.logMessage('Testing podcast feeds...');
+                const enabledCountries = this.config.settings?.enabledCountries?.podcasts || [];
+                
+                for (const [country, countryData] of Object.entries(this.config.podcasts || {})) {
+                    if (enabledCountries.length > 0 && !enabledCountries.includes(country)) {
+                        continue;
+                    }
+
+                    for (const feed of countryData.feeds || []) {
+                        await this.testPodcastFeed(feed);
+                    }
+                }
+            }
+
+            async testStation(station) {
+                const statusEl = document.getElementById(`station-${station.id}`);
+                statusEl.textContent = 'Testing...';
+                statusEl.className = 'test-status status-loading';
+
+                try {
+                    // Test if stream URL is accessible (just check headers, don't download)
+                    const response = await fetch(station.url, { 
+                        method: 'HEAD',
+                        signal: AbortSignal.timeout(10000)
+                    });
+                    
+                    if (response.ok) {
+                        statusEl.textContent = 'OK';
+                        statusEl.className = 'test-status status-success';
+                        this.logMessage(`✓ Station ${station.name}: OK`);
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    statusEl.textContent = 'Error';
+                    statusEl.className = 'test-status status-error';
+                    this.logError(`✗ Station ${station.name}`, error);
+                }
+            }
+
+            async testPodcastFeed(feed) {
+                const statusEl = document.getElementById(`podcast-${feed.id}`);
+                statusEl.textContent = 'Testing...';
+                statusEl.className = 'test-status status-loading';
+
+                const timeout = this.config.settings?.podcastTimeout || 5000;
+                
+                try {
+                    let response;
+                    let usedProxy = false;
+
+                    if (feed.requiresProxy) {
+                        // Use proxy directly
+                        response = await fetch(this.corsProxy + encodeURIComponent(feed.feedUrl), {
+                            signal: AbortSignal.timeout(timeout)
+                        });
+                        usedProxy = true;
+                    } else {
+                        // Try direct first
+                        try {
+                            response = await fetch(feed.feedUrl, {
+                                signal: AbortSignal.timeout(timeout)
+                            });
+                        } catch (directError) {
+                            // Fallback to proxy
+                            this.logMessage(`Direct access failed for ${feed.name}, trying proxy...`);
+                            response = await fetch(this.corsProxy + encodeURIComponent(feed.feedUrl), {
+                                signal: AbortSignal.timeout(timeout)
+                            });
+                            usedProxy = true;
+                        }
+                    }
+
+                    if (response.ok) {
+                        const content = await response.text();
+                        
+                        // Basic content validation
+                        if (feed.type === 'json') {
+                            JSON.parse(content); // Will throw if invalid
+                        } else {
+                            // Check if it's valid XML
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(content, 'text/xml');
+                            if (doc.querySelector('parsererror')) {
+                                throw new Error('Invalid XML');
+                            }
+                        }
+
+                        statusEl.textContent = usedProxy ? 'OK (Proxy)' : 'OK';
+                        statusEl.className = usedProxy ? 'test-status status-proxy' : 'test-status status-success';
+                        this.logMessage(`✓ Podcast ${feed.name}: OK ${usedProxy ? '(via proxy)' : '(direct)'}`);
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    statusEl.textContent = 'Error';
+                    statusEl.className = 'test-status status-error';
+                    this.logError(`✗ Podcast ${feed.name}`, error);
+                }
+            }
+
+            logMessage(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                this.log.textContent += `[${timestamp}] ${message}\n`;
+                this.log.scrollTop = this.log.scrollHeight;
+            }
+
+            logError(message, error) {
+                const timestamp = new Date().toLocaleTimeString();
+                this.log.textContent += `[${timestamp}] ${message}: ${error.message}\n`;
+                this.log.scrollTop = this.log.scrollHeight;
+            }
+
+            clearLog() {
+                document.getElementById('logOutput').innerHTML = '';
+            }
+
+            async testPWAFeatures() {
+                this.logMessage('Testing PWA features...');
+            
+                // Test Service Worker
+                await this.testServiceWorker();
+            
+                // Test Cache API
+                await this.testCacheAPI();
+            
+                // Test Install Status
+                await this.testInstallStatus();
+            
+                // Test Offline Capability
+                await this.testOfflineCapability();
+            
+                this.logMessage('PWA tests completed');
+            }
+
+            async testServiceWorker() {
+                const statusEl = document.getElementById('swStatus');
+            
+                if ('serviceWorker' in navigator) {
+                    try {
+                        const registration = await navigator.serviceWorker.getRegistration();
+                        if (registration) {
+                            statusEl.className = 'test-status status-success';
+                            statusEl.textContent = `✓ Active (${registration.scope})`;
+                            this.logMessage('✓ Service Worker is registered and active');
+                        } else {
+                            statusEl.className = 'test-status status-error';
+                            statusEl.textContent = '✗ Not registered';
+                            this.logError('Service Worker is not registered');
+                        }
+                    } catch (error) {
+                        statusEl.className = 'test-status status-error';
+                        statusEl.textContent = '✗ Error checking';
+                        this.logError(`Service Worker check failed: ${error.message}`);
+                    }
+                } else {
+                    statusEl.className = 'test-status status-error';
+                    statusEl.textContent = '✗ Not supported';
+                    this.logError('Service Worker not supported in this browser');
+                }
+            }
+
+            async testCacheAPI() {
+                const statusEl = document.getElementById('cacheStatus');
+            
+                if ('caches' in window) {
+                    try {
+                        const cacheNames = await caches.keys();
+                        if (cacheNames.length > 0) {
+                            statusEl.className = 'test-status status-success';
+                            statusEl.textContent = `✓ ${cacheNames.length} cache(s)`;
+                            this.logMessage(`✓ Cache API working, found ${cacheNames.length} caches: ${cacheNames.join(', ')}`);
+                        } else {
+                            statusEl.className = 'test-status status-proxy';
+                            statusEl.textContent = '~ No caches yet';
+                            this.logMessage('Cache API supported but no caches found');
+                        }
+                    } catch (error) {
+                        statusEl.className = 'test-status status-error';
+                        statusEl.textContent = '✗ Error accessing';
+                        this.logError(`Cache API error: ${error.message}`);
+                    }
+                } else {
+                    statusEl.className = 'test-status status-error';
+                    statusEl.textContent = '✗ Not supported';
+                    this.logError('Cache API not supported in this browser');
+                }
+            }
+
+            async testInstallStatus() {
+                const statusEl = document.getElementById('installStatus');
+            
+                try {
+                    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+                    const isIosStandalone = window.navigator.standalone === true;
+                    const isInstalled = isStandalone || isIosStandalone;
+                
+                    if (isInstalled) {
+                        statusEl.className = 'test-status status-success';
+                        statusEl.textContent = '✓ App is installed';
+                        this.logMessage('✓ App is running in installed mode');
+                    } else {
+                        statusEl.className = 'test-status status-proxy';
+                        statusEl.textContent = '~ Running in browser';
+                        this.logMessage('App is running in browser mode (not installed)');
+                    }
+                
+                    // Check for install prompt availability
+                    if ('BeforeInstallPromptEvent' in window) {
+                        this.logMessage('✓ Install prompt API supported');
+                    } else {
+                        this.logMessage('Install prompt API not supported');
+                    }
+                } catch (error) {
+                    statusEl.className = 'test-status status-error';
+                    statusEl.textContent = '✗ Error checking';
+                    this.logError(`Install status check failed: ${error.message}`);
+                }
+            }
+
+            async testOfflineCapability() {
+                const statusEl = document.getElementById('offlineStatus');
+            
+                try {
+                    // Check if we're online
+                    const isOnline = navigator.onLine;
+                
+                    // Try to fetch a cached resource
+                    if ('caches' in window) {
+                        const cache = await caches.open('test-cache');
+                        const cachedResponse = await cache.match('./');
+                    
+                        if (cachedResponse) {
+                            statusEl.className = 'test-status status-success';
+                            statusEl.textContent = '✓ Offline ready';
+                            this.logMessage('✓ App has cached resources for offline use');
+                        } else {
+                            statusEl.className = 'test-status status-proxy';
+                            statusEl.textContent = '~ Limited offline';
+                            this.logMessage('Some offline capability, but limited cached resources');
+                        }
+                    } else {
+                        statusEl.className = 'test-status status-error';
+                        statusEl.textContent = '✗ No offline support';
+                        this.logError('No offline capability - Cache API not supported');
+                    }
+                
+                    // Log current network status
+                    if (isOnline) {
+                        this.logMessage('Currently online - offline features available');
+                    } else {
+                        this.logMessage('Currently offline - testing offline mode');
+                    }
+                } catch (error) {
+                    statusEl.className = 'test-status status-error';
+                    statusEl.textContent = '✗ Error testing';
+                    this.logError(`Offline capability test failed: ${error.message}`);
+                }
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ConfigurationTester();
+        });
+    </script>
+    </body>
+    </html>

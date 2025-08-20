@@ -8,7 +8,7 @@
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2c3e50">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Radio News">
 
@@ -19,12 +19,28 @@
     <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+    
+    <!-- Early Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📻 Global Radio News</h1>
-            <p>Stream the latest news from public radio stations worldwide</p>
+            <h1 id="appTitle">📻 Global Radio News</h1>
+            <p id="appDescription">Stream the latest news from public radio stations worldwide</p>
         </header>
 
         <main>
@@ -63,69 +79,8 @@
             <!-- Station List -->
             <div class="stations-section" id="liveSection">
                 <h2>Choose Your Live News Station</h2>
-
-                <div class="country-section">
-                    <h3>🇩🇪 Germany</h3>
-                    <div class="station-grid">
-                        <button class="station-btn" data-url="https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3" data-name="Deutschlandfunk" data-country="Germany">
-                            <div class="station-title">Deutschlandfunk</div>
-                            <div class="station-desc">News & Current Affairs</div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇩🇰 Denmark</h3>
-                    <div class="station-grid">
-                        <button class="station-btn" data-url="https://live-icy.dr.dk/A/A03H.mp3" data-name="DR P1" data-country="Denmark">
-                            <div class="station-title">DR P1</div>
-                            <div class="station-desc">News & Talk</div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇳🇴 Norway</h3>
-                    <div class="station-grid">
-                        <button class="station-btn" data-url="https://lyd.nrk.no/nrk_radio_p2_mp3_h" data-name="NRK P2" data-country="Norway">
-                            <div class="station-title">NRK P2</div>
-                            <div class="station-desc">Culture & News</div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇸🇪 Sweden</h3>
-                    <div class="station-grid">
-                        <button class="station-btn" data-url="https://http-live.sr.se/p1-mp3-192" data-name="SR P1" data-country="Sweden">
-                            <div class="station-title">SR P1</div>
-                            <div class="station-desc">News & Current Affairs</div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇬🇧 United Kingdom</h3>
-                    <div class="station-grid">
-                        <button class="station-btn" data-url="https://bbcmedia.ic.llnwd.net/stream/bbcmedia_radio4fm_mf_p" data-name="BBC Radio 4" data-country="United Kingdom">
-                            <div class="station-title">BBC Radio 4</div>
-                            <div class="station-desc">News, Current Affairs & Drama</div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇺🇸 United States</h3>
-                    <div class="station-grid">
-                        <button class="station-btn" data-url="https://npr-ice.streamguys1.com/live.mp3" data-name="NPR Live" data-country="United States">
-                            <div class="station-title">NPR Live</div>
-                            <div class="station-desc">National Public Radio</div>
-                        </button>
-                        <button class="station-btn" data-url="https://fm939.wnyc.org/wnycfm" data-name="WNYC" data-country="United States">
-                            <div class="station-title">WNYC FM 93.9</div>
-                            <div class="station-desc">New York Public Radio</div>
-                        </button>
-                    </div>
+                <div id="stationsContainer">
+                    <!-- Stations will be loaded dynamically from config -->
                 </div>
             </div>
 
@@ -135,153 +90,8 @@
                 <div class="play-all-container">
                     <button id="playAllPodcastsBtn" class="play-all-btn">🔄 Play All News Podcasts</button>
                 </div>
-
-                <div class="country-section">
-                    <h3>🇩🇰 Denmark</h3>
-                    <div class="podcast-grid">
-                        <div class="podcast-item" data-feed="https://api.dr.dk/podcasts/v1/feeds/radioavisen">
-                            <div class="podcast-header">
-                                <div class="podcast-title">Radioavisen</div>
-                                <div class="podcast-country">Denmark</div>
-                            </div>
-                            <div class="podcast-episode" data-name="Radioavisen">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--div class="country-section">
-                    <h3>🇳🇴 Norway</h3>
-                    <div class="podcast-grid">
-                        <div class="podcast-item" data-feed="https://radio.nrk.no/serie/dagsnytt-atten-podcast/MUHR01000121/rss">
-                            <div class="podcast-header">
-                                <div class="podcast-title">Dagsnytt Atten</div>
-                                <div class="podcast-country">Norway</div>
-                            </div>
-                            <div class="podcast-episode" data-name="Dagsnytt Atten">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div-->
-
-                <div class="country-section">
-                    <h3>🇸🇪 Sweden</h3>
-                    <div class="podcast-grid">
-                        <div class="podcast-item" data-feed="https://api.sr.se/api/rss/pod/3795">
-                            <div class="podcast-header">
-                                <div class="podcast-title">Ekot</div>
-                                <div class="podcast-country">Sweden</div>
-                            </div>
-                            <div class="podcast-episode" data-name="Ekot">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇩🇪 Germany</h3>
-                    <div class="podcast-grid">
-                        <div class="podcast-item" data-feed="https://www.deutschlandfunk.de/nachrichten-108.xml">
-                            <div class="podcast-header">
-                                <div class="podcast-title">DLF Nachrichten</div>
-                                <div class="podcast-country">Germany</div>
-                            </div>
-                            <div class="podcast-episode" data-name="DLF Nachrichten">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇬🇧 United Kingdom</h3>
-                    <div class="podcast-grid">
-                        <div class="podcast-item" data-feed="https://podcasts.files.bbci.co.uk/p02nq0gn.rss">
-                            <div class="podcast-header">
-                                <div class="podcast-title">BBC News Summary</div>
-                                <div class="podcast-country">United Kingdom</div>
-                            </div>
-                            <div class="podcast-episode" data-name="BBC News Summary">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="country-section">
-                    <h3>🇺🇸 United States</h3>
-                    <div class="podcast-grid">
-                        <div class="podcast-item" data-feed="https://feeds.npr.org/500005/podcast.xml">
-                            <div class="podcast-header">
-                                <div class="podcast-title">NPR News Now</div>
-                                <div class="podcast-country">United States</div>
-                            </div>
-                            <div class="podcast-episode" data-name="NPR News Now">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                        <div class="podcast-item" data-feed="https://feeds.simplecast.com/54nAGcIl">
-                            <div class="podcast-header">
-                                <div class="podcast-title">Up First</div>
-                                <div class="podcast-country">United States</div>
-                            </div>
-                            <div class="podcast-episode" data-name="Up First">
-                                <div class="episode-info">
-                                    <div class="episode-title">Loading...</div>
-                                    <div class="episode-meta">
-                                        <span class="episode-date">--</span>
-                                        <span class="episode-duration">--</span>
-                                    </div>
-                                </div>
-                                <button class="podcast-play-btn" disabled>▶️</button>
-                            </div>
-                        </div>
-                    </div>
+                <div id="podcastsContainer">
+                    <!-- Podcasts will be loaded dynamically from config -->
                 </div>
             </div>
 
