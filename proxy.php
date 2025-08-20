@@ -5,6 +5,9 @@
  * Returns original response content with proper CORS protection
  */
 
+// Load configuration
+require_once 'config.php';
+
 // Get the current domain for CORS protection
 $currentDomain = $_SERVER['HTTP_HOST'] ?? '';
 $allowedOrigins = [
@@ -20,7 +23,7 @@ $isAllowedOrigin = false;
 if (!empty($origin)) {
     $originParts = parse_url($origin);
     $originHost = $originParts['host'] ?? '';
-    
+
     foreach ($allowedOrigins as $allowed) {
         if ($originHost === $allowed || str_ends_with($originHost, '.' . $allowed)) {
             $isAllowedOrigin = true;
@@ -80,23 +83,24 @@ if (!filter_var($feedUrl, FILTER_VALIDATE_URL)) {
     exit;
 }
 
-// Whitelist of allowed domains for security
-$allowedDomains = [
-    'api.dr.dk',
-    'www.deutschlandfunk.de',
-    'psapi.nrk.no',
-    'api.sr.se',
-    'podcasts.files.bbci.co.uk',
-    'feeds.npr.org',
-    'feeds.simplecast.com',
-    'rss.cnn.com',
-    'feeds.bbci.co.uk',
-    'radiofrance-podcast.net',
-    'www.tagesschau.de',
-    'www.cbc.ca',
-    'www.abc.net.au',
-    'www.pbs.org'
-];
+// Get allowed domains from configuration
+try {
+    $allowedDomains = RadioNewsConfig::getAllowedDomains();
+} catch (Exception $e) {
+    error_log("Failed to load allowed domains from config: " . $e->getMessage());
+    http_response_code(500);
+    header('Content-Type: text/plain');
+    echo 'Configuration error';
+    exit;
+}
+
+// Fallback to empty array if no domains configured
+if (empty($allowedDomains)) {
+    http_response_code(403);
+    header('Content-Type: text/plain');
+    echo 'No allowed domains configured';
+    exit;
+}
 
 $urlParts = parse_url($feedUrl);
 $domain = $urlParts['host'] ?? '';
@@ -141,7 +145,7 @@ try {
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
     $curlError = curl_error($ch);
-    
+
     curl_close($ch);
 
     if (!empty($curlError)) {
@@ -164,30 +168,30 @@ try {
 
     // Determine content type and validate if needed
     $responseContentType = $contentType ?: 'application/xml';
-    
+
     // Basic validation for XML content
     if (strpos($responseContentType, 'xml') !== false || strpos($response, '<?xml') === 0) {
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($response);
-        
+
         if ($xml === false) {
             $errors = libxml_get_errors();
             $errorMsg = 'Invalid XML';
             if (!empty($errors)) {
                 $errorMsg .= ': ' . trim($errors[0]->message);
             }
-            
+
             http_response_code(422);
             header('Content-Type: text/plain');
             echo $errorMsg;
             exit;
         }
         libxml_clear_errors();
-        
+
         // Set proper XML content type
         $responseContentType = 'application/xml; charset=utf-8';
     }
-    
+
     // Validate JSON content
     if (strpos($responseContentType, 'json') !== false || (strpos($response, '{') === 0 || strpos($response, '[') === 0)) {
         $json = json_decode($response);
@@ -197,7 +201,7 @@ try {
             echo 'Invalid JSON: ' . json_last_error_msg();
             exit;
         }
-        
+
         // Set proper JSON content type
         $responseContentType = 'application/json; charset=utf-8';
     }
@@ -206,23 +210,23 @@ try {
     $cacheTime = 300; // 5 minutes
     header("Cache-Control: public, max-age=$cacheTime");
     header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $cacheTime) . ' GMT');
-    
+
     // Set the original content type
     header('Content-Type: ' . $responseContentType);
-    
+
     // Add custom headers for debugging (optional)
     if (isset($_GET['debug']) && $_GET['debug'] === '1') {
         header('X-Proxy-URL: ' . $feedUrl);
         header('X-Proxy-Status: ' . $httpCode);
         header('X-Proxy-Time: ' . date('c'));
     }
-    
+
     // Return the original response content
     echo $response;
 
 } catch (Exception $e) {
     error_log("RSS Proxy Error for $feedUrl: " . $e->getMessage());
-    
+
     http_response_code(500);
     header('Content-Type: text/plain');
     echo 'Failed to fetch feed: ' . $e->getMessage();

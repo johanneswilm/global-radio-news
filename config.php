@@ -245,4 +245,14 @@ class RadioNewsConfig {
         
         return null;
     }
+    
+    /**
+     * Get allowed domains for proxy requests
+     * 
+     * @return array Array of allowed domain strings
+     */
+    public static function getAllowedDomains() {
+        $settings = self::getSettings();
+        return $settings['allowedDomains'] ?? [];
+    }
 }

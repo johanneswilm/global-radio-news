@@ -220,6 +220,23 @@
     "enabledCountries": {
       "stations": ["Germany", "United Kingdom", "United States", "France"],
       "podcasts": ["Germany", "United Kingdom", "United States", "Denmark"]
-    }
+    },
+    "allowedDomains": [
+      "api.dr.dk",
+      "www.deutschlandfunk.de",
+      "psapi.nrk.no",
+      "api.sr.se",
+      "podcasts.files.bbci.co.uk",
+      "feeds.npr.org",
+      "feeds.simplecast.com",
+      "rss.cnn.com",
+      "feeds.bbci.co.uk",
+      "radiofrance-podcast.net",
+      "www.tagesschau.de",
+      "www.cbc.ca",
+      "www.abc.net.au",
+      "www.pbs.org",
+      "sindrel.github.io"
+    ]
   }
 }

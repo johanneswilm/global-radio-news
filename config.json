@@ -86,6 +86,18 @@
         }
       ]
     },
+    "Norway": {
+      "flag": "🇳🇴",
+      "feeds": [
+        {
+          "id": "dagsnytt18",
+          "name": "Dagsnytt 18",
+          "feedUrl": "https://sindrel.github.io/nrk-pod-feeds/rss/dagsnytt_atten.xml",
+          "type": "rss",
+          "requiresProxy": true
+        }
+      ]
+    },
     "Sweden": {
       "flag": "🇸🇪",
       "feeds": [
@@ -150,7 +162,24 @@
     "podcastTimeout": 5000,
     "enabledCountries": {
       "stations": ["Germany", "Denmark", "Norway", "Sweden", "United Kingdom", "United States"],
-      "podcasts": ["Denmark", "Sweden", "Germany", "United Kingdom", "United States"]
-    }
+      "podcasts": ["Denmark", "Sweden", "Norway", "Germany", "United Kingdom", "United States"]
+    },
+    "allowedDomains": [
+      "api.dr.dk",
+      "www.deutschlandfunk.de",
+      "psapi.nrk.no",
+      "api.sr.se",
+      "podcasts.files.bbci.co.uk",
+      "feeds.npr.org",
+      "feeds.simplecast.com",
+      "rss.cnn.com",
+      "feeds.bbci.co.uk",
+      "radiofrance-podcast.net",
+      "www.tagesschau.de",
+      "www.cbc.ca",
+      "www.abc.net.au",
+      "www.pbs.org",
+      "sindrel.github.io"
+    ]
   }
 }
